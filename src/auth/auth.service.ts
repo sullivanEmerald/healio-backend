@@ -32,16 +32,17 @@ export class AuthService {
         return userWithoutPassword;
     }
 
-    async validateUser(businessEmail: string, password: string) {
+    async validateUser(businessEmail: string, password: string, role: string) {
         const user = await this.usersService.findByEmail(businessEmail);
         if (!user) throw new UnauthorizedException('Email is not associated with any account');
+        if (user.role !== role) throw new UnauthorizedException('Invalid role for this account');
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) throw new UnauthorizedException('Invalid passsword');
         return user;
     }
 
     async login(loginDto: LoginDto) {
-        const user = await this.validateUser(loginDto.email, loginDto.password);
+        const user = await this.validateUser(loginDto.email, loginDto.password, loginDto.role);
         const payload = { sub: user._id, role: user.role };
         const token = this.jwtService.sign(payload);
         return {

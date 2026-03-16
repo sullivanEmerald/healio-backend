@@ -9,6 +9,8 @@ import { UsersModule } from './users/users.module';
 import { ProviderService } from './provider/provider.service';
 import { ShiftsModule } from './shifts/shifts.module';
 import { ProviderModule } from './provider/provider.module';
+import { CarerController } from './carer/carer.controller';
+import { CarerModule } from './carer/carer.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -17,8 +19,9 @@ import { ProviderModule } from './provider/provider.module';
     UsersModule,
     ShiftsModule,
     ProviderModule,
+    CarerModule,
   ],
-  controllers: [AppController, UsersController],
+  controllers: [AppController, UsersController, CarerController],
   providers: [AppService, ProviderService],
 })
 export class AppModule { }

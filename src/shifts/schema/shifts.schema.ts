@@ -1,6 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
+export enum ShiftStatus {
+    PUBLISHED = 'published',
+    ASSIGNED = 'assigned',
+    INPROGRESS = 'inprogress',
+    COMPLETED = 'completed',
+    APPROVED = 'approved',
+    PAID = 'paid',
+}
+
 @Schema({ timestamps: true })
 export class Shift extends Document {
     @Prop({ index: true })
@@ -60,8 +69,11 @@ export class Shift extends Document {
     @Prop()
     paymentFrequency: string;
 
-    @Prop({ index: true })
+    @Prop({ index: true, type: 'ObjectId', ref: 'User' })
     providerId: string;
+
+    @Prop({ enum: ShiftStatus, default: ShiftStatus.PUBLISHED, index: true })
+    status: ShiftStatus;
 }
 
 export const ShiftSchema = SchemaFactory.createForClass(Shift);
