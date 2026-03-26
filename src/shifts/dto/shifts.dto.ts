@@ -5,7 +5,7 @@ export class CreateShiftDto {
     title: string;
 
     @IsString()
-    postcode: string;
+    state: string;
 
     @IsOptional()
     @IsDate()
@@ -52,7 +52,7 @@ export class CreateShiftDto {
     isReoccuringShift: boolean;
 
     @IsString()
-    hourlyRate: string;
+    amount: string;
 
     @IsString()
     expenses: string;

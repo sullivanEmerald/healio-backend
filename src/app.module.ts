@@ -11,6 +11,7 @@ import { ShiftsModule } from './shifts/shifts.module';
 import { ProviderModule } from './provider/provider.module';
 import { CarerController } from './carer/carer.controller';
 import { CarerModule } from './carer/carer.module';
+import { ApplicationModule } from './application/application.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -20,6 +21,7 @@ import { CarerModule } from './carer/carer.module';
     ShiftsModule,
     ProviderModule,
     CarerModule,
+    ApplicationModule,
   ],
   controllers: [AppController, UsersController, CarerController],
   providers: [AppService, ProviderService],

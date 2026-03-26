@@ -16,7 +16,7 @@ export class Shift extends Document {
     title: string;
 
     @Prop({ index: true })
-    postcode: string;
+    state: string;
 
     @Prop()
     startDate: Date;
@@ -61,7 +61,7 @@ export class Shift extends Document {
     isReoccuringShift: boolean;
 
     @Prop()
-    hourlyRate: string;
+    amount: string;
 
     @Prop()
     expenses: string;
