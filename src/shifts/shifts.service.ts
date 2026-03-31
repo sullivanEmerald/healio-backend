@@ -24,7 +24,10 @@ export class ShiftsService {
     }
 
     async findShiftById(shiftId: string) {
-        return this.shiftModel.findById(shiftId).exec();
+        const shiftApplications = await this.applicationModel.find({ shiftId }).populate('carerId', 'firstName lastName, updatedAt').exec();
+        console.log("provider shift application", shiftApplications)
+        const shift = await this.shiftModel.findById(shiftId).exec();
+        return { shift, applications: shiftApplications };
     }
 
     async getAllShifts(filters: any, carerId: string) {
