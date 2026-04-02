@@ -10,7 +10,7 @@ import { Application, ApplicationSchema } from 'src/application/schema/applicati
   imports: [
     MongooseModule.forFeature([
       { name: Shift.name, schema: ShiftSchema },
-      { name: Application.name, schema: ApplicationSchema }, // <-- Add this line
+      { name: Application.name, schema: ApplicationSchema },
     ]),
     ApplicationModule,
   ],

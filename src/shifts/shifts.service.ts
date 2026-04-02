@@ -102,4 +102,15 @@ export class ShiftsService {
             .sort({ startDate: 1 })
             .exec();
     }
+
+    async updateShiftAssignedCarer(shiftId: string, carerId: string) {
+        return await this.shiftModel.findByIdAndUpdate(
+            shiftId,
+            {
+                assignedCarerId: carerId,
+                status: ShiftStatus.ASSIGNED,
+            },
+            { new: true }
+        );
+    }
 }

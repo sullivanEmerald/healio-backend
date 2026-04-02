@@ -6,8 +6,7 @@ export enum ShiftStatus {
     ASSIGNED = 'assigned',
     INPROGRESS = 'inprogress',
     COMPLETED = 'completed',
-    APPROVED = 'approved',
-    PAID = 'paid',
+    CANCELLED = 'cancelled'
 }
 
 @Schema({ timestamps: true })
@@ -71,6 +70,9 @@ export class Shift extends Document {
 
     @Prop({ index: true, type: 'ObjectId', ref: 'User' })
     providerId: string;
+
+    @Prop({ default: null })
+    assignedCarerId?: string;
 
     @Prop({ enum: ShiftStatus, default: ShiftStatus.PUBLISHED, index: true })
     status: ShiftStatus;

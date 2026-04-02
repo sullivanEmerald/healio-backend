@@ -7,9 +7,6 @@ export enum ApplicationStatus {
     PENDING = 'pending',
     APPROVED = 'approved',
     REJECTED = 'rejected',
-    STARTED = 'started',
-    COMPLETED = 'completed',
-    PAID = 'paid',
 }
 
 @Schema({ timestamps: true })

@@ -23,4 +23,9 @@ export class ProviderController {
     async getShiftById(@Param('id') id: string, @Req() req: any) {
         return this.providerService.getShiftForProvider(req.user.userId, id);
     }
+
+    @Post('application/:applicationId/approve')
+    async approveApplication(@Param('applicationId') applicationId: string, @Req() req: any) {
+        return this.providerService.approveApplication(req.user.userId, applicationId);
+    }
 }
