@@ -20,12 +20,11 @@ export class ShiftsService {
     }
 
     async findShiftsByProvider(providerId: string) {
-        return this.shiftModel.find({ providerId }).sort({ startDate: -1 }).exec();
+        return this.shiftModel.find({ providerId }).sort({ startDate: -1 }).populate('assignedCarerId', 'firstName lastName').exec();
     }
 
     async findShiftById(shiftId: string) {
-        const shiftApplications = await this.applicationModel.find({ shiftId }).populate('carerId', 'firstName lastName, updatedAt').exec();
-        console.log("provider shift application", shiftApplications)
+        const shiftApplications = await this.applicationModel.find({ shiftId }).populate('carerId', 'firstName lastName updatedAt').exec();
         const shift = await this.shiftModel.findById(shiftId).exec();
         return { shift, applications: shiftApplications };
     }
@@ -107,7 +106,7 @@ export class ShiftsService {
         return await this.shiftModel.findByIdAndUpdate(
             shiftId,
             {
-                assignedCarerId: carerId,
+                assignedCarerId: carerId, // carerId should already be an ObjectId or string
                 status: ShiftStatus.ASSIGNED,
             },
             { new: true }

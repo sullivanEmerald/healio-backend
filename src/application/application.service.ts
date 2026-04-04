@@ -43,4 +43,19 @@ export class ApplicationService {
             providerId: provider?._id.toString()
         });
     }
+
+    async getApplicationsByCarerId(carerId: string) {
+        const appliedShifts = await this.applicationModel.find({ carerId })
+            .populate({
+                path: 'shiftId',
+                populate: { path: 'providerId', select: 'firstName lastName' }
+            })
+            .exec();
+        const assignedShifts = await this.assignmentService.getAssignmentsByCarerId(carerId);
+
+        return {
+            appliedShifts,
+            assignedShifts,
+        };
+    }
 }

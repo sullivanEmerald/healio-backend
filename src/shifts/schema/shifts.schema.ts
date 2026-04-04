@@ -71,7 +71,7 @@ export class Shift extends Document {
     @Prop({ index: true, type: 'ObjectId', ref: 'User' })
     providerId: string;
 
-    @Prop({ default: null })
+    @Prop({ default: null, type: 'ObjectId', ref: 'User' })
     assignedCarerId?: string;
 
     @Prop({ enum: ShiftStatus, default: ShiftStatus.PUBLISHED, index: true })

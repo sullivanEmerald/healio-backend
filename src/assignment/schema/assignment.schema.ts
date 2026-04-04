@@ -4,9 +4,10 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 export type AssignmentDocument = Assignment & Document;
 
 export enum AssignmentStatus {
-  ASSIGNED = 'ASSIGNED',
-  STARTED = 'STARTED',
-  COMPLETED = 'COMPLETED',
+  ASSIGNED = 'assigned',
+  INPROGRESS = 'in-progress',
+  COMPLETED = 'completed',
+  REVIWED = 'reviewed',
 }
 
 @Schema({ timestamps: true })

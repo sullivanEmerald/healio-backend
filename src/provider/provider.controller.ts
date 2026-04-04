@@ -15,7 +15,9 @@ export class ProviderController {
 
     @Get('shifts')
     async getShifts(@Req() req: any) {
-        return this.providerService.getShiftsForProvider(req.user.userId);
+        const results = await this.providerService.getShiftsForProvider(req.user.userId);
+        console.log("provider shifts", results);
+        return results;
     }
 
 
@@ -24,8 +26,9 @@ export class ProviderController {
         return this.providerService.getShiftForProvider(req.user.userId, id);
     }
 
-    @Post('application/:applicationId/approve')
+    @Post('applications/:applicationId/approve')
     async approveApplication(@Param('applicationId') applicationId: string, @Req() req: any) {
+        // console.log(`Provider ${req.user.userId} is approving application ${applicationId}`);
         return this.providerService.approveApplication(req.user.userId, applicationId);
     }
 }
