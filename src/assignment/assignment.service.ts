@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Assignment, AssignmentDocument } from './schema/assignment.schema';
@@ -45,5 +45,28 @@ export class AssignmentService {
         assignment.completedAt = new Date();
         await assignment.save();
         return assignment;
+    }
+
+    async getAssignmentsByProvider(providerId: string) {
+        return await this.assignmentModel.find({ providerId })
+            .populate({
+                path: 'shiftId',
+                populate: { path: 'providerId', select: 'firstName lastName' }
+            })
+            .populate({
+                path: 'carerId',
+                select: 'firstName lastName'
+            })
+            .exec();
+    }
+
+    async reviewAssignment(assignmentId: string) {
+        const assignment = await this.assignmentModel.findById(assignmentId);
+        if (!assignment) {
+            throw new Error('Assignment not found');
+        }
+        assignment.status = AssignmentStatus.REVIEWED;
+        await assignment.save();
+        return HttpStatus.OK;
     }
 }

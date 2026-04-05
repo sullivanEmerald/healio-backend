@@ -7,7 +7,7 @@ export enum AssignmentStatus {
   ASSIGNED = 'assigned',
   INPROGRESS = 'in-progress',
   COMPLETED = 'completed',
-  REVIWED = 'reviewed',
+  REVIEWED = 'reviewed',
 }
 
 @Schema({ timestamps: true })

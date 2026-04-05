@@ -40,7 +40,7 @@ export class ApplicationService {
         await this.assignmentService.createAssignment({
             shiftId: application.shiftId,
             carerId: application.carerId,
-            providerId: provider?._id.toString()
+            providerId: provider?.providerId.toString(),
         });
     }
 

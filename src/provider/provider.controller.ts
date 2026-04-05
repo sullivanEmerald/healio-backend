@@ -16,7 +16,6 @@ export class ProviderController {
     @Get('shifts')
     async getShifts(@Req() req: any) {
         const results = await this.providerService.getShiftsForProvider(req.user.userId);
-        console.log("provider shifts", results);
         return results;
     }
 
@@ -30,5 +29,10 @@ export class ProviderController {
     async approveApplication(@Param('applicationId') applicationId: string, @Req() req: any) {
         // console.log(`Provider ${req.user.userId} is approving application ${applicationId}`);
         return this.providerService.approveApplication(req.user.userId, applicationId);
+    }
+
+    @Post('assignment/:assignmentId/review')
+    async reviewAssignment(@Param('assignmentId') assignmentId: string, @Req() req: any) {
+        return this.providerService.reviewAssignment(req.user.userId, assignmentId);
     }
 }

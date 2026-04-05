@@ -4,6 +4,7 @@ import { CreateShiftDto } from '../shifts/dto/shifts.dto';
 import { UsersService } from '../users/users.service';
 import { UserRole } from '../users/shema/user.schema';
 import { ApplicationService } from 'src/application/application.service';
+import { AssignmentService } from 'src/assignment/assignment.service';
 
 
 
@@ -13,6 +14,7 @@ export class ProviderService {
         private readonly shiftsService: ShiftsService,
         private readonly usersService: UsersService,
         private readonly applicationService: ApplicationService,
+        private readonly assignmentService: AssignmentService,
     ) { }
 
     async createShiftForProvider(providerId: string, createShiftDto: CreateShiftDto) {
@@ -30,7 +32,15 @@ export class ProviderService {
         if (!provider || provider.role !== UserRole.PROVIDER) {
             throw new UnauthorizedException('Only providers can access their shifts');
         }
-        return this.shiftsService.findShiftsByProvider(providerId);
+        // Get all shifts created by the provider
+        const shifts = await this.shiftsService.findShiftsByProvider(providerId);
+        // Get all assignments for this provider
+        const assignments = await this.assignmentService.getAssignmentsByProvider(providerId);
+        console.log("provider assignments", assignments);
+        return {
+            shifts,
+            assignments,
+        };
     }
 
     async getShiftForProvider(providerId: string, shiftId: string) {
@@ -47,5 +57,13 @@ export class ProviderService {
             throw new UnauthorizedException('Only providers can access their shifts');
         }
         return this.applicationService.approveApplication(applicationId);
+    }
+
+    async reviewAssignment(userId, assignmentId) {
+        const provider = await this.usersService.findById(userId);
+        if (!provider || provider.role !== UserRole.PROVIDER) {
+            throw new UnauthorizedException('Only providers can access their shifts');
+        }
+        return this.assignmentService.reviewAssignment(assignmentId);
     }
 }
