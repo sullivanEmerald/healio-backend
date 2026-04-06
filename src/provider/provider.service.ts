@@ -36,7 +36,6 @@ export class ProviderService {
         const shifts = await this.shiftsService.findShiftsByProvider(providerId);
         // Get all assignments for this provider
         const assignments = await this.assignmentService.getAssignmentsByProvider(providerId);
-        console.log("provider assignments", assignments);
         return {
             shifts,
             assignments,
@@ -73,5 +72,13 @@ export class ProviderService {
             throw new UnauthorizedException('Only providers can update their shifts');
         }
         return this.shiftsService.updateShift(shiftId, updateShiftDto);
+    }
+
+    async saveDraftShift(providerId: string, saveDraftDto: Partial<CreateShiftDto>) {
+        const provider = await this.usersService.findById(providerId);
+        if (!provider || provider.role !== UserRole.PROVIDER) {
+            throw new UnauthorizedException('Only providers can save draft shifts');
+        }
+        return this.shiftsService.saveDraftShift(saveDraftDto, providerId);
     }
 }

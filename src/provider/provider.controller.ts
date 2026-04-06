@@ -41,4 +41,9 @@ export class ProviderController {
     async updateShift(@Param('id') id: string, @Body() updateShiftDto: CreateShiftDto, @Req() req: any) {
         return this.providerService.updateShiftForProvider(req.user.userId, id, updateShiftDto);
     }
+
+    @Post('shift/draft')
+    async saveDraftShift(@Body() saveDraftDto: Partial<CreateShiftDto>, @Req() req: any) {
+        return this.providerService.saveDraftShift(req.user.userId, saveDraftDto);
+    }
 }

@@ -6,6 +6,7 @@ import { CreateShiftDto } from './dto/shifts.dto';
 import { ShiftStatus } from './schema/shifts.schema';
 import { Application, ApplicationDocument } from 'src/application/schema/application.schema';
 
+
 @Injectable()
 export class ShiftsService {
     constructor(
@@ -20,7 +21,13 @@ export class ShiftsService {
     }
 
     async findShiftsByProvider(providerId: string) {
-        return this.shiftModel.find({ providerId }).sort({ startDate: -1 }).populate('assignedCarerId', 'firstName lastName').exec();
+        return this.shiftModel.find({
+            providerId,
+            status: { $in: [ShiftStatus.PUBLISHED, ShiftStatus.DRAFT] },
+        })
+            .sort({ createdAt: -1 })
+            .populate('assignedCarerId', 'firstName lastName')
+            .exec();
     }
 
     async findShiftById(shiftId: string) {
@@ -116,5 +123,10 @@ export class ShiftsService {
 
     async updateShift(shiftId: string, updateData: Partial<CreateShiftDto>) {
         return await this.shiftModel.findByIdAndUpdate(shiftId, updateData, { new: true });
+    }
+
+    async saveDraftShift(draftData: Partial<CreateShiftDto>, providerId: string) {
+        const draftShift = new this.shiftModel({ ...draftData, providerId, status: ShiftStatus.DRAFT });
+        return await draftShift.save();
     }
 }
