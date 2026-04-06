@@ -66,4 +66,12 @@ export class ProviderService {
         }
         return this.assignmentService.reviewAssignment(assignmentId);
     }
+
+    async updateShiftForProvider(providerId: string, shiftId: string, updateShiftDto: CreateShiftDto) {
+        const provider = await this.usersService.findById(providerId);
+        if (!provider || provider.role !== UserRole.PROVIDER) {
+            throw new UnauthorizedException('Only providers can update their shifts');
+        }
+        return this.shiftsService.updateShift(shiftId, updateShiftDto);
+    }
 }

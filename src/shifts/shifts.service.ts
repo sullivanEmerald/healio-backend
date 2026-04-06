@@ -26,6 +26,7 @@ export class ShiftsService {
     async findShiftById(shiftId: string) {
         const shiftApplications = await this.applicationModel.find({ shiftId }).populate('carerId', 'firstName lastName updatedAt').exec();
         const shift = await this.shiftModel.findById(shiftId).exec();
+        console.log('shifts for edit', shift)
         return { shift, applications: shiftApplications };
     }
 
@@ -111,5 +112,9 @@ export class ShiftsService {
             },
             { new: true }
         );
+    }
+
+    async updateShift(shiftId: string, updateData: Partial<CreateShiftDto>) {
+        return await this.shiftModel.findByIdAndUpdate(shiftId, updateData, { new: true });
     }
 }

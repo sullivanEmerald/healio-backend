@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req, UseGuards, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Req, UseGuards, Get, Param, Put } from '@nestjs/common';
 import { ProviderService } from './provider.service';
 import { CreateShiftDto } from '../shifts/dto/shifts.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -34,5 +34,11 @@ export class ProviderController {
     @Post('assignment/:assignmentId/review')
     async reviewAssignment(@Param('assignmentId') assignmentId: string, @Req() req: any) {
         return this.providerService.reviewAssignment(req.user.userId, assignmentId);
+    }
+
+
+    @Put('shifts/:id')
+    async updateShift(@Param('id') id: string, @Body() updateShiftDto: CreateShiftDto, @Req() req: any) {
+        return this.providerService.updateShiftForProvider(req.user.userId, id, updateShiftDto);
     }
 }
