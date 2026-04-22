@@ -74,11 +74,19 @@ export class ProviderService {
         return this.shiftsService.updateShift(shiftId, updateShiftDto);
     }
 
-    async saveDraftShift(providerId: string, saveDraftDto: Partial<CreateShiftDto>) {
+    async saveDraftShift(providerId: string, draftId: string, saveDraftDto: Partial<CreateShiftDto>) {
         const provider = await this.usersService.findById(providerId);
         if (!provider || provider.role !== UserRole.PROVIDER) {
             throw new UnauthorizedException('Only providers can save draft shifts');
         }
-        return this.shiftsService.saveDraftShift(saveDraftDto, providerId);
+        return this.shiftsService.saveDraftShift(saveDraftDto, providerId, draftId);
+    }
+
+    async getDraftShift(providerId: string, shiftId: string) {
+        const provider = await this.usersService.findById(providerId);
+        if (!provider || provider.role !== UserRole.PROVIDER) {
+            throw new UnauthorizedException('Only providers can access their draft shifts');
+        }
+        return this.shiftsService.findDraftShiftById(shiftId);
     }
 }

@@ -58,7 +58,7 @@ export class Shift extends Document {
     rightToWork: boolean;
 
     @Prop({ default: false })
-    isReoccuringShift: boolean;
+    isReoccurring: boolean;
 
     @Prop()
     amount: string;

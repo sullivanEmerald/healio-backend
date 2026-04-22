@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
 import { Shift } from './schema/shifts.schema';
 import { CreateShiftDto } from './dto/shifts.dto';
 import { ShiftStatus } from './schema/shifts.schema';
@@ -125,8 +125,18 @@ export class ShiftsService {
         return await this.shiftModel.findByIdAndUpdate(shiftId, updateData, { new: true });
     }
 
-    async saveDraftShift(draftData: Partial<CreateShiftDto>, providerId: string) {
-        const draftShift = new this.shiftModel({ ...draftData, providerId, status: ShiftStatus.DRAFT });
-        return await draftShift.save();
+    async saveDraftShift(draftData: Partial<CreateShiftDto>, providerId: string, draftId?: string) {
+        if (draftId && isValidObjectId(draftId)) {
+            // Update existing draft
+            return await this.shiftModel.findByIdAndUpdate(draftId, { ...draftData, providerId }, { returnDocument: 'after' });
+        } else {
+            // Create new draft
+            const draftShift = new this.shiftModel({ ...draftData, providerId, status: ShiftStatus.DRAFT });
+            return await draftShift.save();
+        }
+    }
+
+    async findDraftShiftById(shiftId: string) {
+        return await this.shiftModel.findOne({ _id: shiftId, status: ShiftStatus.DRAFT }).exec();
     }
 }

@@ -49,7 +49,7 @@ export class CreateShiftDto {
     rightToWork: boolean;
 
     @IsBoolean()
-    isReoccuringShift: boolean;
+    isReoccurring: boolean;
 
     @IsString()
     amount: string;
