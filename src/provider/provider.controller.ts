@@ -19,6 +19,16 @@ export class ProviderController {
         return results;
     }
 
+    @Get('profile')
+    async getProfile(@Req() req: any) {
+        return this.providerService.getProfileForProvider(req.user.userId);
+    }
+
+    @Put('profile')
+    async updateProfile(@Body() updateProfileDto: any, @Req() req: any) {
+        return this.providerService.updateProfileForProvider(req.user.userId, updateProfileDto);
+    }
+
     @Get('shifts')
     async getShifts(@Req() req: any) {
         const results = await this.providerService.getShiftsForProvider(req.user.userId);

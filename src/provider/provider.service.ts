@@ -8,6 +8,7 @@ import { AssignmentService } from 'src/assignment/assignment.service';
 import { ApplicationStatus } from 'src/application/schema/application.schema';
 import { ShiftStatus } from 'src/shifts/schema/shifts.schema';
 import { AssignmentStatus } from 'src/assignment/schema/assignment.schema';
+import { UpdateProviderDto } from './dto/updateProvider.dto';
 
 
 
@@ -123,5 +124,26 @@ export class ProviderService {
             totalWorkers
         };
 
+    }
+
+    async getProfileForProvider(providerId: string) {
+        const provider = await this.usersService.findById(providerId);
+        if (!provider || provider.role !== UserRole.PROVIDER) {
+            throw new UnauthorizedException('Only providers can access their profile');
+        }
+        return {
+            firstName: provider.firstName,
+            lastName: provider.lastName,
+            businessEmail: provider.businessEmail,
+            phoneNumber: provider.phoneNumber,
+        };
+    }
+
+    async updateProfileForProvider(providerId: string, updateProfileDto: UpdateProviderDto) {
+        const provider = await this.usersService.findById(providerId);
+        if (!provider || provider.role !== UserRole.PROVIDER) {
+            throw new UnauthorizedException('Only providers can update their profile');
+        }
+        return this.usersService.updateUser(providerId, updateProfileDto);
     }
 }
