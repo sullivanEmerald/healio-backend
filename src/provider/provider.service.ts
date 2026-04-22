@@ -5,6 +5,9 @@ import { UsersService } from '../users/users.service';
 import { UserRole } from '../users/shema/user.schema';
 import { ApplicationService } from 'src/application/application.service';
 import { AssignmentService } from 'src/assignment/assignment.service';
+import { ApplicationStatus } from 'src/application/schema/application.schema';
+import { ShiftStatus } from 'src/shifts/schema/shifts.schema';
+import { AssignmentStatus } from 'src/assignment/schema/assignment.schema';
 
 
 
@@ -88,5 +91,37 @@ export class ProviderService {
             throw new UnauthorizedException('Only providers can access their draft shifts');
         }
         return this.shiftsService.findDraftShiftById(shiftId);
+    }
+
+    async getDashboardOverview(providerId: string) {
+        const provider = await this.usersService.findById(providerId);
+        if (!provider || provider.role !== UserRole.PROVIDER) {
+            throw new UnauthorizedException('Only providers can access their draft shifts');
+        }
+
+        const [shifts, assignments] = await Promise.all([
+            this.shiftsService.findShiftsByProvider(providerId),
+            this.assignmentService.getAssignmentsByProvider(providerId)
+        ]);
+        const totalShifts = shifts.length;
+        const publishedShifts = shifts.filter(shift => shift.status === ShiftStatus.PUBLISHED).length;
+        const draftShifts = shifts.filter(shift => shift.status === ShiftStatus.DRAFT).length;
+        const inProgressShifts = assignments.filter(assignment => assignment.status === AssignmentStatus.INPROGRESS).length;
+        const assignedShifts = assignments.filter(assignment => assignment.status === AssignmentStatus.ASSIGNED).length;
+        const completedShifts = assignments.filter(assignment => assignment.status === AssignmentStatus.COMPLETED).length;
+        const approvedShifts = assignments.filter(assignment => assignment.status === AssignmentStatus.REVIEWED).length;
+        const totalWorkers = assignments.filter(assignment => [AssignmentStatus.INPROGRESS, AssignmentStatus.ASSIGNED, AssignmentStatus.COMPLETED, AssignmentStatus.REVIEWED].includes(assignment.status)).length;
+
+        return {
+            totalShifts,
+            published: publishedShifts,
+            // draft: draftShifts,
+            inProgress: inProgressShifts,
+            // assigned: assignedShifts,
+            pending: completedShifts,
+            approved: approvedShifts,
+            totalWorkers
+        };
+
     }
 }

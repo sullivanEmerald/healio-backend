@@ -13,6 +13,12 @@ export class ProviderController {
         return this.providerService.createShiftForProvider(req.user.userId, createShiftDto);
     }
 
+    @Get('dashboard/overview')
+    async getDashboardOverview(@Req() req: any) {
+        const results = await this.providerService.getDashboardOverview(req.user.userId);
+        return results;
+    }
+
     @Get('shifts')
     async getShifts(@Req() req: any) {
         const results = await this.providerService.getShiftsForProvider(req.user.userId);
