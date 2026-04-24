@@ -2,8 +2,10 @@ import { Controller, Post, Body, Req, UseGuards, Get, Param, Put } from '@nestjs
 import { ProviderService } from './provider.service';
 import { CreateShiftDto } from '../shifts/dto/shifts.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { UpdateProviderDto } from './dto/updateProvider.dto';
+import { ProviderGuard } from 'src/auth/guards/provider.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, ProviderGuard)
 @Controller('provider')
 export class ProviderController {
     constructor(private readonly providerService: ProviderService) { }
@@ -25,7 +27,7 @@ export class ProviderController {
     }
 
     @Put('profile')
-    async updateProfile(@Body() updateProfileDto: any, @Req() req: any) {
+    async updateProfile(@Body() updateProfileDto: UpdateProviderDto, @Req() req: any) {
         return this.providerService.updateProfileForProvider(req.user.userId, updateProfileDto);
     }
 

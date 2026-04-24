@@ -146,4 +146,6 @@ export class ProviderService {
         }
         return this.usersService.updateUser(providerId, updateProfileDto);
     }
+
+
 }

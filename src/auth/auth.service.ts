@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -55,5 +55,18 @@ export class AuthService {
                 role: user.role,
             },
         };
+    }
+
+    async changePassword(userId: string, currentPassword: string, newPassword: string) {
+        const user = await this.usersService.findById(userId);
+        if (!user) throw new UnauthorizedException('User not found');
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) throw new UnauthorizedException({
+            message: 'Current password is incorrect',
+            redirect: true,
+        });
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+        await this.usersService.updateUser(userId, { password: hashedNewPassword });
+        return HttpStatus.OK;
     }
 }
