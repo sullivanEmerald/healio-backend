@@ -28,6 +28,7 @@ export class ProviderPoolService {
             }
             return HttpStatus.OK;
         } catch (error) {
+            console.log(error);
             throw new Error('Error adding carer to provider pool');
         }
     }

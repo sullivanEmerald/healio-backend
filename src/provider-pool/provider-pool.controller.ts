@@ -11,6 +11,6 @@ export class ProviderPoolController {
 
     @Post('carers/:carerId')
     async addCarerToPool(@Param('carerId') carerId: string, @Req() req: any) {
-        return this.providerPoolService.addCarerToPool(carerId, req.user.id);
+        return this.providerPoolService.addCarerToPool(carerId, req.user.userId);
     }
 }

@@ -3,11 +3,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './shema/user.schema';
+import { ProviderPool, ProviderPoolDocument } from 'src/provider-pool/schema/provider-pool.schema';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectModel(User.name) private userModel: Model<User>,
+        @InjectModel(ProviderPool.name) private providerPoolModel: Model<ProviderPoolDocument>,
     ) { }
 
     private generateVerificationToken(): string {
@@ -50,8 +52,14 @@ export class UsersService {
         return updatedUser;
     }
 
-    async findCarersByProvider(): Promise<{ id: string; fullName: string; businessEmail: string }[]> {
-        const carers = await this.userModel.find({ role: 'carer' }).exec();
+    async findCarersByProvider(providerId: string): Promise<{ id: string; fullName: string; businessEmail: string }[]> {
+        const providerPool = await this.providerPoolModel.findOne({ providerId }).exec();
+        const carerIdsInPool = providerPool ? providerPool.carerIds : [];
+        // Use $nin to exclude carers already in the pool
+        const carers = await this.userModel.find({
+            role: 'carer',
+            _id: { $nin: carerIdsInPool }
+        }).exec();
         return carers.map(carer => ({
             id: carer._id.toString(),
             fullName: `${carer.firstName} ${carer.lastName}`,

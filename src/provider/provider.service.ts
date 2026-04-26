@@ -153,6 +153,6 @@ export class ProviderService {
         if (!provider || provider.role !== UserRole.PROVIDER) {
             throw new UnauthorizedException('Only providers can access their carers');
         }
-        return this.usersService.findCarersByProvider();
+        return this.usersService.findCarersByProvider(providerId);
     }
 }
