@@ -69,4 +69,9 @@ export class ProviderController {
     async getDraftShift(@Param('id') id: string, @Req() req: any) {
         return this.providerService.getDraftShift(req.user.userId, id);
     }
+
+    @Get('carers')
+    async getCarers(@Req() req: any) {
+        return this.providerService.getCarersForProvider(req.user.userId);
+    }
 }

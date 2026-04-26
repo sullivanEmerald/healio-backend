@@ -49,4 +49,13 @@ export class UsersService {
         }
         return updatedUser;
     }
+
+    async findCarersByProvider(): Promise<{ id: string; fullName: string; businessEmail: string }[]> {
+        const carers = await this.userModel.find({ role: 'carer' }).exec();
+        return carers.map(carer => ({
+            id: carer._id.toString(),
+            fullName: `${carer.firstName} ${carer.lastName}`,
+            businessEmail: carer.businessEmail,
+        }));
+    }
 }

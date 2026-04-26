@@ -13,6 +13,7 @@ import { CarerController } from './carer/carer.controller';
 import { CarerModule } from './carer/carer.module';
 import { ApplicationModule } from './application/application.module';
 import { AssignmentModule } from './assignment/assignment.module';
+import { ProviderPoolModule } from './provider-pool/provider-pool.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -24,6 +25,7 @@ import { AssignmentModule } from './assignment/assignment.module';
     CarerModule,
     ApplicationModule,
     AssignmentModule,
+    ProviderPoolModule,
   ],
   controllers: [AppController, UsersController, CarerController],
   providers: [AppService, ProviderService],
