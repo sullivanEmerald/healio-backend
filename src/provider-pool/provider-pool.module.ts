@@ -11,6 +11,7 @@ import { UsersModule } from 'src/users/users.module';
     forwardRef(() => UsersModule),
   ],
   controllers: [ProviderPoolController],
-  providers: [ProviderPoolService]
+  providers: [ProviderPoolService],
+  exports: [ProviderPoolService],
 })
 export class ProviderPoolModule { }

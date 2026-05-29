@@ -128,10 +128,10 @@ export class ShiftsService {
     async saveDraftShift(draftData: Partial<CreateShiftDto>, providerId: string, draftId?: string) {
         if (draftId && isValidObjectId(draftId)) {
             // Update existing draft
-            return await this.shiftModel.findByIdAndUpdate(draftId, { ...draftData, providerId }, { returnDocument: 'after' });
+            return await this.shiftModel.findByIdAndUpdate(draftId, { ...draftData, providerId, intendedCarerId: draftData.poolId }, { returnDocument: 'after' });
         } else {
             // Create new draft
-            const draftShift = new this.shiftModel({ ...draftData, providerId, status: ShiftStatus.DRAFT });
+            const draftShift = new this.shiftModel({ ...draftData, providerId, intendedCarerId: draftData.poolId, status: ShiftStatus.DRAFT });
             return await draftShift.save();
         }
     }

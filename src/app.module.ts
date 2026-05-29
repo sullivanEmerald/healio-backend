@@ -14,6 +14,7 @@ import { CarerModule } from './carer/carer.module';
 import { ApplicationModule } from './application/application.module';
 import { AssignmentModule } from './assignment/assignment.module';
 import { ProviderPoolModule } from './provider-pool/provider-pool.module';
+import { InvitationModule } from './invitation/invitation.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -26,6 +27,7 @@ import { ProviderPoolModule } from './provider-pool/provider-pool.module';
     ApplicationModule,
     AssignmentModule,
     ProviderPoolModule,
+    InvitationModule,
   ],
   controllers: [AppController, UsersController, CarerController],
   providers: [AppService, ProviderService],

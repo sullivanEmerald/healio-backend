@@ -59,4 +59,7 @@ export class CreateShiftDto {
 
     @IsString()
     paymentFrequency: string;
+
+    @IsString()
+    poolId?: string;
 }

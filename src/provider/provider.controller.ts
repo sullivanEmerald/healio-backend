@@ -12,6 +12,7 @@ export class ProviderController {
 
     @Post('shifts')
     async createShift(@Body() createShiftDto: CreateShiftDto, @Req() req: any) {
+        console.log('Creating shift for provider', req.user.userId, createShiftDto);
         return this.providerService.createShiftForProvider(req.user.userId, createShiftDto);
     }
 

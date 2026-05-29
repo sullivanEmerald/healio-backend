@@ -9,7 +9,8 @@ import { ApplicationStatus } from 'src/application/schema/application.schema';
 import { ShiftStatus } from 'src/shifts/schema/shifts.schema';
 import { AssignmentStatus } from 'src/assignment/schema/assignment.schema';
 import { UpdateProviderDto } from './dto/updateProvider.dto';
-
+import { ProviderPoolService } from 'src/provider-pool/provider-pool.service';
+import { InvitationService } from 'src/invitation/invitation.service';
 
 
 @Injectable()
@@ -19,6 +20,8 @@ export class ProviderService {
         private readonly usersService: UsersService,
         private readonly applicationService: ApplicationService,
         private readonly assignmentService: AssignmentService,
+        private readonly providerPoolService: ProviderPoolService,
+        private readonly invitationService: InvitationService,
     ) { }
 
     async createShiftForProvider(providerId: string, createShiftDto: CreateShiftDto) {
@@ -28,7 +31,17 @@ export class ProviderService {
             throw new UnauthorizedException('Only providers can create shifts');
         }
 
-        return this.shiftsService.createShift(createShiftDto, providerId);
+        const createdShift = await this.shiftsService.createShift(createShiftDto, providerId);
+
+        if (createShiftDto.poolId && createShiftDto.poolId !== '') {
+            await this.invitationService.createInvitation({
+                shiftId: createdShift.id,
+                providerId,
+                carerId: createShiftDto.poolId,
+            });
+        }
+
+        return createdShift;
     }
 
     async getShiftsForProvider(providerId: string) {
@@ -154,5 +167,13 @@ export class ProviderService {
             throw new UnauthorizedException('Only providers can access their carers');
         }
         return this.usersService.findCarersByProvider(providerId);
+    }
+
+    async getMyCarersForProvider(providerId: string) {
+        const provider = await this.usersService.findById(providerId);
+        if (!provider || provider.role !== UserRole.PROVIDER) {
+            throw new UnauthorizedException('Only providers can access their carers');
+        }
+        return this.providerPoolService.getCarersByProvider(providerId);
     }
 }

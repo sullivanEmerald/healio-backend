@@ -32,4 +32,22 @@ export class ProviderPoolService {
             throw new Error('Error adding carer to provider pool');
         }
     }
+
+    async getCarersByProvider(providerId: string) {
+        const provider = await this.usersService.findById(providerId)
+        if (!provider) {
+            throw new NotFoundException('Provider not found');
+        }
+        const providerPool = await this.providerPoolModel.findOne({ providerId }).populate({
+            path: 'carerIds',
+            select: 'firstName lastName businessEmail _id',
+        });
+
+        return providerPool?.carerIds
+            .filter(carer => typeof carer === 'object' && carer !== null && '_id' in carer)
+            .map((carer: any) => ({
+                id: carer._id.toString(),
+                fullName: `${carer.firstName} ${carer.lastName}`,
+            })) || [];
+    }
 }
